@@ -1,0 +1,1 @@
+## Contains the results of the project (`.csv`, `.txt`, etc. files, images) any material as a result of the pipeline
