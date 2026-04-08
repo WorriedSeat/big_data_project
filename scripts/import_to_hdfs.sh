@@ -1,6 +1,7 @@
 password=$(cat secrets/.psql.pass | tr -d '\n\r')
 
 hdfs dfs -rm -r -f /user/team14/project/warehouse || true
+hdfs dfs -mkdir -p /user/team14/project/warehouse
 
 echo "Loading data in hdfs (Parquet + Snappy)..."
 
