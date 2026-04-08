@@ -11,16 +11,10 @@ sqoop import-all-tables \
     --warehouse-dir /user/team14/project/warehouse \
     --as-parquetfile \
     --compression-codec=snappy \
-    --m 1
+    --m 4
 
 echo "Loaded everything on HDFS"
 
 echo ""
 echo "Results in HDFS:"
 hdfs dfs -ls /user/team14/project/warehouse
-
-echo ""
-echo "Tables:"
-hdfs dfs -ls /user/team14/project/warehouse/airlines
-hdfs dfs -ls /user/team14/project/warehouse/airports
-hdfs dfs -ls /user/team14/project/warehouse/flights
