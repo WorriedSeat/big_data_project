@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 import psycopg2 as psql
-from sqlalchemy import create_engine 
 from pprint import pprint
 
 def build_projectdb():
