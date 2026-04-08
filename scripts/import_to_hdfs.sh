@@ -12,7 +12,7 @@ sqoop import-all-tables \
     --warehouse-dir /user/team14/project/warehouse \
     --as-parquetfile \
     --compression-codec=snappy \
-    --m 4
+    --m 1
 
 echo "Loaded everything on HDFS"
 
