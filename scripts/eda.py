@@ -93,7 +93,7 @@ def _populate_flights_part(spark):
             delay_due_nas,
             delay_due_security,
             delay_due_late_aircraft,
-            YEAR(FROM_UNIXTIME(fl_date / 1000)) AS flight_year
+            YEAR(FROM_UNIXTIME(CAST(fl_date AS BIGINT) / 1000)) AS flight_year
         FROM team14_projectdb.flights
     """)
     print("flights_part populated.")
@@ -110,8 +110,8 @@ def main():
     _run_query(spark, "q1", """
         SELECT
             a.airline_name,
-            ROUND(AVG(f.arr_delay), 2)  AS avg_arr_delay_min,
-            COUNT(*)                    AS total_flights
+            ROUND(AVG(CAST(f.arr_delay AS DOUBLE)), 2) AS avg_arr_delay_min,
+            COUNT(*)                                   AS total_flights
         FROM team14_projectdb.flights  f
         JOIN team14_projectdb.airlines a ON f.airline_code = a.airline_code
         WHERE f.cancelled = false
@@ -123,13 +123,13 @@ def main():
     # Q2: Monthly flight volume and average delays (seasonal trends)
     _run_query(spark, "q2", """
         SELECT
-            DATE_FORMAT(FROM_UNIXTIME(fl_date / 1000), 'yyyy-MM') AS year_month,
-            COUNT(*)                                               AS flight_count,
-            ROUND(AVG(dep_delay), 2)                              AS avg_dep_delay_min,
-            ROUND(AVG(arr_delay), 2)                              AS avg_arr_delay_min
+            DATE_FORMAT(FROM_UNIXTIME(CAST(fl_date AS BIGINT) / 1000), 'yyyy-MM') AS year_month,
+            COUNT(*)                                                                AS flight_count,
+            ROUND(AVG(CAST(dep_delay AS DOUBLE)), 2)                               AS avg_dep_delay_min,
+            ROUND(AVG(CAST(arr_delay AS DOUBLE)), 2)                               AS avg_arr_delay_min
         FROM team14_projectdb.flights
         WHERE cancelled = false
-        GROUP BY DATE_FORMAT(FROM_UNIXTIME(fl_date / 1000), 'yyyy-MM')
+        GROUP BY DATE_FORMAT(FROM_UNIXTIME(CAST(fl_date AS BIGINT) / 1000), 'yyyy-MM')
         ORDER BY year_month
     """, "Monthly flight volume and average delays")
 
@@ -137,11 +137,11 @@ def main():
     _run_query(spark, "q3", """
         SELECT
             f.origin,
-            ap1.city_name               AS origin_city,
+            ap1.city_name                                       AS origin_city,
             f.dest,
-            ap2.city_name               AS dest_city,
-            COUNT(*)                    AS flight_count,
-            ROUND(AVG(f.arr_delay), 2)  AS avg_arr_delay_min
+            ap2.city_name                                       AS dest_city,
+            COUNT(*)                                            AS flight_count,
+            ROUND(AVG(CAST(f.arr_delay AS DOUBLE)), 2)         AS avg_arr_delay_min
         FROM team14_projectdb.flights  f
         JOIN team14_projectdb.airports ap1 ON f.origin = ap1.iata_code
         JOIN team14_projectdb.airports ap2 ON f.dest   = ap2.iata_code
@@ -154,11 +154,11 @@ def main():
     _run_query(spark, "q4", """
         SELECT
             a.airline_name,
-            COUNT(*)                                                          AS total_flights,
-            SUM(CASE WHEN f.cancelled = true THEN 1 ELSE 0 END)             AS cancelled_count,
+            COUNT(*)                                                           AS total_flights,
+            SUM(CASE WHEN f.cancelled = true THEN 1 ELSE 0 END)              AS cancelled_count,
             ROUND(
                 100.0 * SUM(CASE WHEN f.cancelled = true THEN 1 ELSE 0 END)
-                      / COUNT(*), 2)                                         AS cancellation_rate_pct
+                      / COUNT(*), 2)                                          AS cancellation_rate_pct
         FROM team14_projectdb.flights  f
         JOIN team14_projectdb.airlines a ON f.airline_code = a.airline_code
         GROUP BY a.airline_name
@@ -168,13 +168,13 @@ def main():
     # Q5: Average delay contribution by cause (delayed flights only)
     _run_query(spark, "q5", """
         SELECT
-            ROUND(AVG(delay_due_carrier),       2) AS avg_carrier_delay_min,
-            ROUND(AVG(delay_due_weather),       2) AS avg_weather_delay_min,
-            ROUND(AVG(delay_due_nas),           2) AS avg_nas_delay_min,
-            ROUND(AVG(delay_due_security),      2) AS avg_security_delay_min,
-            ROUND(AVG(delay_due_late_aircraft), 2) AS avg_late_aircraft_delay_min
+            ROUND(AVG(CAST(delay_due_carrier       AS DOUBLE)), 2) AS avg_carrier_delay_min,
+            ROUND(AVG(CAST(delay_due_weather       AS DOUBLE)), 2) AS avg_weather_delay_min,
+            ROUND(AVG(CAST(delay_due_nas           AS DOUBLE)), 2) AS avg_nas_delay_min,
+            ROUND(AVG(CAST(delay_due_security      AS DOUBLE)), 2) AS avg_security_delay_min,
+            ROUND(AVG(CAST(delay_due_late_aircraft AS DOUBLE)), 2) AS avg_late_aircraft_delay_min
         FROM team14_projectdb.flights
-        WHERE arr_delay > 0
+        WHERE CAST(arr_delay AS DOUBLE) > 0
           AND (
               delay_due_carrier       IS NOT NULL OR
               delay_due_weather       IS NOT NULL OR
