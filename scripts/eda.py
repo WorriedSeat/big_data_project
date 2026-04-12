@@ -93,7 +93,7 @@ def _populate_flights_part(spark):
             delay_due_nas,
             delay_due_security,
             delay_due_late_aircraft,
-            CAST(SUBSTR(fl_date, 1, 4) AS INT) AS flight_year
+            YEAR(FROM_UNIXTIME(fl_date / 1000)) AS flight_year
         FROM team14_projectdb.flights
     """)
     print("flights_part populated.")
@@ -123,13 +123,13 @@ def main():
     # Q2: Monthly flight volume and average delays (seasonal trends)
     _run_query(spark, "q2", """
         SELECT
-            SUBSTR(fl_date, 1, 7)           AS year_month,
-            COUNT(*)                        AS flight_count,
-            ROUND(AVG(dep_delay), 2)        AS avg_dep_delay_min,
-            ROUND(AVG(arr_delay), 2)        AS avg_arr_delay_min
+            DATE_FORMAT(FROM_UNIXTIME(fl_date / 1000), 'yyyy-MM') AS year_month,
+            COUNT(*)                                               AS flight_count,
+            ROUND(AVG(dep_delay), 2)                              AS avg_dep_delay_min,
+            ROUND(AVG(arr_delay), 2)                              AS avg_arr_delay_min
         FROM team14_projectdb.flights
         WHERE cancelled = false
-        GROUP BY SUBSTR(fl_date, 1, 7)
+        GROUP BY DATE_FORMAT(FROM_UNIXTIME(fl_date / 1000), 'yyyy-MM')
         ORDER BY year_month
     """, "Monthly flight volume and average delays")
 
