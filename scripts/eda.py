@@ -24,6 +24,7 @@ def _create_spark():
         .config("spark.sql.warehouse.dir", WAREHOUSE)
         .config("spark.driver.extraClassPath", PG_JAR)
         .config("spark.jars", PG_JAR)
+        .config("spark.sql.parquet.enableVectorizedReader", "false")
         .enableHiveSupport()
         .getOrCreate()
     )
