@@ -88,13 +88,52 @@ CREATE EXTERNAL TABLE flights_part (
     delay_due_late_aircraft STRING
 )
 PARTITIONED BY (flight_year INT)
+CLUSTERED BY (airline_code) INTO 8 BUCKETS
 STORED AS PARQUET
 LOCATION '/user/team14/project/hive/warehouse/flights_part'
 TBLPROPERTIES ('parquet.compress'='SNAPPY');
 
+SET hive.exec.dynamic.partition=true;
+SET hive.exec.dynamic.partition.mode=nonstrict;
+SET hive.enforce.bucketing=true;
+
+INSERT INTO TABLE flights_part PARTITION (flight_year)
+SELECT
+    flight_id,
+    airline_code,
+    origin,
+    dest,
+    fl_number,
+    fl_date,
+    crs_dep_time,
+    dep_time,
+    crs_arr_time,
+    arr_time,
+    dep_delay,
+    arr_delay,
+    taxi_out,
+    wheels_off,
+    wheels_on,
+    taxi_in,
+    cancelled,
+    cancellation_code,
+    diverted,
+    crs_elapsed_time,
+    elapsed_time,
+    air_time,
+    distance,
+    delay_due_carrier,
+    delay_due_weather,
+    delay_due_nas,
+    delay_due_security,
+    delay_due_late_aircraft,
+    YEAR(FROM_UNIXTIME(CAST(fl_date AS BIGINT) DIV 1000)) AS flight_year
+FROM flights;
+
+DROP TABLE IF EXISTS flights;
 
 SHOW TABLES;
 
-SELECT COUNT(*) AS airlines_count FROM airlines;
-SELECT COUNT(*) AS airports_count FROM airports;
-SELECT COUNT(*) AS flights_count  FROM flights;
+SELECT COUNT(*) AS airlines_count   FROM airlines;
+SELECT COUNT(*) AS airports_count   FROM airports;
+SELECT COUNT(*) AS flights_part_count FROM flights_part;

@@ -14,7 +14,7 @@ SELECT
     a.airline_name,
     ROUND(AVG(CAST(f.arr_delay AS DOUBLE)), 2) AS avg_arr_delay_min,
     COUNT(*)                                   AS total_flights
-FROM flights f
+FROM flights_part f
 JOIN airlines a ON f.airline_code = a.airline_code
 WHERE f.cancelled = false
   AND f.arr_delay IS NOT NULL

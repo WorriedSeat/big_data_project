@@ -20,7 +20,7 @@ SELECT
     ap2.city_name                                    AS dest_city,
     COUNT(*)                                         AS flight_count,
     ROUND(AVG(CAST(f.arr_delay AS DOUBLE)), 2)       AS avg_arr_delay_min
-FROM flights f
+FROM flights_part f
 JOIN airports ap1 ON f.origin = ap1.iata_code
 JOIN airports ap2 ON f.dest   = ap2.iata_code
 GROUP BY f.origin, ap1.city_name, f.dest, ap2.city_name

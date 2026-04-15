@@ -18,7 +18,7 @@ SELECT
     ROUND(
         100.0 * SUM(CASE WHEN f.cancelled = true THEN 1 ELSE 0 END)
               / COUNT(*), 2)                                            AS cancellation_rate_pct
-FROM flights f
+FROM flights_part f
 JOIN airlines a ON f.airline_code = a.airline_code
 GROUP BY a.airline_name
 ORDER BY cancellation_rate_pct DESC;

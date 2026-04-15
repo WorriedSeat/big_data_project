@@ -16,7 +16,7 @@ SELECT
     COUNT(*)                                                                 AS flight_count,
     ROUND(AVG(CAST(dep_delay AS DOUBLE)), 2)                                AS avg_dep_delay_min,
     ROUND(AVG(CAST(arr_delay AS DOUBLE)), 2)                                AS avg_arr_delay_min
-FROM flights
+FROM flights_part
 WHERE cancelled = false
 GROUP BY DATE_FORMAT(FROM_UNIXTIME(CAST(fl_date AS BIGINT) DIV 1000), 'yyyy-MM')
 ORDER BY year_month;
