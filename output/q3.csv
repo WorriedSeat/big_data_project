@@ -1,0 +1,46 @@
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> USE team14_projectdb;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> DROP TABLE IF EXISTS q3_results;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE TABLE q3_results (
+. . . . . . . . . . . . . . . . . . . . . . .>     origin            STRING,
+. . . . . . . . . . . . . . . . . . . . . . .>     origin_city       STRING,
+. . . . . . . . . . . . . . . . . . . . . . .>     dest              STRING,
+. . . . . . . . . . . . . . . . . . . . . . .>     dest_city         STRING,
+. . . . . . . . . . . . . . . . . . . . . . .>     flight_count      BIGINT,
+. . . . . . . . . . . . . . . . . . . . . . .>     avg_arr_delay_min DOUBLE
+. . . . . . . . . . . . . . . . . . . . . . .> )
+. . . . . . . . . . . . . . . . . . . . . . .> STORED AS PARQUET;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> INSERT INTO TABLE q3_results
+. . . . . . . . . . . . . . . . . . . . . . .> SELECT
+. . . . . . . . . . . . . . . . . . . . . . .>     f.origin,
+. . . . . . . . . . . . . . . . . . . . . . .>     ap1.city_name                                    AS origin_city,
+. . . . . . . . . . . . . . . . . . . . . . .>     f.dest,
+. . . . . . . . . . . . . . . . . . . . . . .>     ap2.city_name                                    AS dest_city,
+. . . . . . . . . . . . . . . . . . . . . . .>     COUNT(*)                                         AS flight_count,
+. . . . . . . . . . . . . . . . . . . . . . .>     ROUND(AVG(CAST(f.arr_delay AS DOUBLE)), 2)       AS avg_arr_delay_min
+. . . . . . . . . . . . . . . . . . . . . . .> FROM flights f
+. . . . . . . . . . . . . . . . . . . . . . .> JOIN airports ap1 ON f.origin = ap1.iata_code
+. . . . . . . . . . . . . . . . . . . . . . .> JOIN airports ap2 ON f.dest   = ap2.iata_code
+. . . . . . . . . . . . . . . . . . . . . . .> GROUP BY f.origin, ap1.city_name, f.dest, ap2.city_name
+. . . . . . . . . . . . . . . . . . . . . . .> ORDER BY flight_count DESC
+. . . . . . . . . . . . . . . . . . . . . . .> LIMIT 10;
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> SELECT * FROM q3_results;
++---------+--------------------+-------+--------------------+---------------+--------------------+
+| origin  |    origin_city     | dest  |     dest_city      | flight_count  | avg_arr_delay_min  |
++---------+--------------------+-------+--------------------+---------------+--------------------+
+| SFO     | San Francisco, CA  | LAX   | Los Angeles, CA    | 5358          | -0.43              |
+| LAX     | Los Angeles, CA    | SFO   | San Francisco, CA  | 5212          | 2.83               |
+| LGA     | New York, NY       | ORD   | Chicago, IL        | 4735          | 4.67               |
+| OGG     | Kahului, HI        | HNL   | Honolulu, HI       | 4656          | 3.67               |
+| ORD     | Chicago, IL        | LGA   | New York, NY       | 4634          | 10.87              |
+| LAX     | Los Angeles, CA    | LAS   | Las Vegas, NV      | 4627          | 5.67               |
+| HNL     | Honolulu, HI       | OGG   | Kahului, HI        | 4554          | 2.37               |
+| LAS     | Las Vegas, NV      | LAX   | Los Angeles, CA    | 4550          | 5.77               |
+| LAX     | Los Angeles, CA    | JFK   | New York, NY       | 4403          | 1.87               |
+| JFK     | New York, NY       | LAX   | Los Angeles, CA    | 4305          | -1.39              |
++---------+--------------------+-------+--------------------+---------------+--------------------+
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
