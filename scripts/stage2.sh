@@ -11,31 +11,23 @@ $BEELINE -f sql/hive_db.hql 2>&1 | tee output/hive_results.txt
 echo "Done. See output/hive_results.txt"
 
 echo "=== Running Q1: Average arrival delay by airline ==="
-$BEELINE -f sql/q1.hql 2>&1 | tee output/q1_hive.txt
-echo "Done."
+$BEELINE -f sql/q1.hql > output/q1.csv
+echo "Done. See output/q1.csv"
 
 echo "=== Running Q2: Monthly flight volume and delays ==="
-$BEELINE -f sql/q2.hql 2>&1 | tee output/q2_hive.txt
-echo "Done."
+$BEELINE -f sql/q2.hql > output/q2.csv
+echo "Done. See output/q2.csv"
 
 echo "=== Running Q3: Top 10 busiest routes ==="
-$BEELINE -f sql/q3.hql 2>&1 | tee output/q3_hive.txt
-echo "Done."
+$BEELINE -f sql/q3.hql > output/q3.csv
+echo "Done. See output/q3.csv"
 
 echo "=== Running Q4: Cancellation rate by airline ==="
-$BEELINE -f sql/q4.hql 2>&1 | tee output/q4_hive.txt
-echo "Done."
+$BEELINE -f sql/q4.hql > output/q4.csv
+echo "Done. See output/q4.csv"
 
 echo "=== Running Q5: Average delay by cause ==="
-$BEELINE -f sql/q5.hql 2>&1 | tee output/q5_hive.txt
-echo "Done."
+$BEELINE -f sql/q5.hql > output/q5.csv
+echo "Done. See output/q5.csv"
 
-echo "=== Exporting results to CSV ==="
-BEELINE_CSV="beeline -u jdbc:hive2://hadoop-03.uni.innopolis.ru:10001 -n team14 -p $hive_password --outputformat=csv2 --showHeader=true --silent=true"
-$BEELINE_CSV -e "SELECT * FROM team14_projectdb.q1_results;" > output/q1.csv
-$BEELINE_CSV -e "SELECT * FROM team14_projectdb.q2_results;" > output/q2.csv
-$BEELINE_CSV -e "SELECT * FROM team14_projectdb.q3_results;" > output/q3.csv
-$BEELINE_CSV -e "SELECT * FROM team14_projectdb.q4_results;" > output/q4.csv
-$BEELINE_CSV -e "SELECT * FROM team14_projectdb.q5_results;" > output/q5.csv
-    
 echo "=== Stage 2 finished ==="
