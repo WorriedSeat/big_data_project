@@ -1,0 +1,589 @@
+Connecting to jdbc:hive2://hadoop-03.uni.innopolis.ru:10001
+2026-04-15 11:42:11,800 INFO jdbc.Utils: Supplied authorities: hadoop-03.uni.innopolis.ru:10001
+2026-04-15 11:42:11,801 INFO jdbc.Utils: Resolved authority: hadoop-03.uni.innopolis.ru:10001
+Connected to: Apache Hive (version 3.1.3)
+Driver: Hive JDBC (version 2.3.9)
+Transaction isolation: TRANSACTION_REPEATABLE_READ
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> USE team14_projectdb;
+INFO  : Compiling command(queryId=hive_20260415114212_e9d54ec6-7c2b-479e-aa43-0481fbab7a12): USE team14_projectdb
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Returning Hive schema: Schema(fieldSchemas:null, properties:null)
+INFO  : EXPLAIN output for queryid hive_20260415114212_e9d54ec6-7c2b-479e-aa43-0481fbab7a12 : STAGE DEPENDENCIES:
+  Stage-0 is a root stage [DDL]
+
+STAGE PLANS:
+  Stage: Stage-0
+
+
+INFO  : Completed compiling command(queryId=hive_20260415114212_e9d54ec6-7c2b-479e-aa43-0481fbab7a12); Time taken: 0.044 seconds
+INFO  : Executing command(queryId=hive_20260415114212_e9d54ec6-7c2b-479e-aa43-0481fbab7a12): USE team14_projectdb
+INFO  : Starting task [Stage-0:DDL] in serial mode
+INFO  : Completed executing command(queryId=hive_20260415114212_e9d54ec6-7c2b-479e-aa43-0481fbab7a12); Time taken: 0.008 seconds
+INFO  : OK
+No rows affected (0.1 seconds)
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> DROP TABLE IF EXISTS q1_results;
+INFO  : Compiling command(queryId=hive_20260415114212_1917165c-79ad-4065-a5bc-bf1cefa51590): DROP TABLE IF EXISTS q1_results
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Returning Hive schema: Schema(fieldSchemas:null, properties:null)
+INFO  : EXPLAIN output for queryid hive_20260415114212_1917165c-79ad-4065-a5bc-bf1cefa51590 : STAGE DEPENDENCIES:
+  Stage-0 is a root stage [DDL]
+
+STAGE PLANS:
+  Stage: Stage-0
+      Drop Table Operator:
+        Drop Table
+          table: q1_results
+
+
+INFO  : Completed compiling command(queryId=hive_20260415114212_1917165c-79ad-4065-a5bc-bf1cefa51590); Time taken: 0.03 seconds
+INFO  : Executing command(queryId=hive_20260415114212_1917165c-79ad-4065-a5bc-bf1cefa51590): DROP TABLE IF EXISTS q1_results
+INFO  : Starting task [Stage-0:DDL] in serial mode
+INFO  : Completed executing command(queryId=hive_20260415114212_1917165c-79ad-4065-a5bc-bf1cefa51590); Time taken: 0.003 seconds
+INFO  : OK
+No rows affected (0.053 seconds)
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE TABLE q1_results (
+. . . . . . . . . . . . . . . . . . . . . . .>     airline_name       STRING,
+. . . . . . . . . . . . . . . . . . . . . . .>     avg_arr_delay_min  DOUBLE,
+. . . . . . . . . . . . . . . . . . . . . . .>     total_flights      BIGINT
+. . . . . . . . . . . . . . . . . . . . . . .> )
+. . . . . . . . . . . . . . . . . . . . . . .> STORED AS PARQUET;
+INFO  : Compiling command(queryId=hive_20260415114212_b4aba108-61f9-4cbf-8f96-f91af43c3e43): CREATE TABLE q1_results (
+airline_name       STRING,
+avg_arr_delay_min  DOUBLE,
+total_flights      BIGINT
+)
+STORED AS PARQUET
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Returning Hive schema: Schema(fieldSchemas:null, properties:null)
+INFO  : EXPLAIN output for queryid hive_20260415114212_b4aba108-61f9-4cbf-8f96-f91af43c3e43 : STAGE DEPENDENCIES:
+  Stage-0 is a root stage [DDL]
+
+STAGE PLANS:
+  Stage: Stage-0
+      Create Table Operator:
+        Create Table
+          columns: airline_name string, avg_arr_delay_min double, total_flights bigint
+          input format: org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat
+          output format: org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat
+          serde name: org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe
+          name: team14_projectdb.q1_results
+
+
+INFO  : Completed compiling command(queryId=hive_20260415114212_b4aba108-61f9-4cbf-8f96-f91af43c3e43); Time taken: 0.029 seconds
+INFO  : Executing command(queryId=hive_20260415114212_b4aba108-61f9-4cbf-8f96-f91af43c3e43): CREATE TABLE q1_results (
+airline_name       STRING,
+avg_arr_delay_min  DOUBLE,
+total_flights      BIGINT
+)
+STORED AS PARQUET
+INFO  : Starting task [Stage-0:DDL] in serial mode
+INFO  : Completed executing command(queryId=hive_20260415114212_b4aba108-61f9-4cbf-8f96-f91af43c3e43); Time taken: 0.029 seconds
+INFO  : OK
+No rows affected (0.09 seconds)
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> INSERT INTO TABLE q1_results
+. . . . . . . . . . . . . . . . . . . . . . .> SELECT
+. . . . . . . . . . . . . . . . . . . . . . .>     a.airline_name,
+. . . . . . . . . . . . . . . . . . . . . . .>     ROUND(AVG(CAST(f.arr_delay AS DOUBLE)), 2) AS avg_arr_delay_min,
+. . . . . . . . . . . . . . . . . . . . . . .>     COUNT(*)                                   AS total_flights
+. . . . . . . . . . . . . . . . . . . . . . .> FROM flights f
+. . . . . . . . . . . . . . . . . . . . . . .> JOIN airlines a ON f.airline_code = a.airline_code
+. . . . . . . . . . . . . . . . . . . . . . .> WHERE f.cancelled = false
+. . . . . . . . . . . . . . . . . . . . . . .>   AND f.arr_delay IS NOT NULL
+. . . . . . . . . . . . . . . . . . . . . . .> GROUP BY a.airline_name
+. . . . . . . . . . . . . . . . . . . . . . .> ORDER BY avg_arr_delay_min ASC;
+INFO  : Compiling command(queryId=hive_20260415114212_4a30f9e5-ead8-4586-879d-72ecb7da500a): INSERT INTO TABLE q1_results
+SELECT
+a.airline_name,
+ROUND(AVG(CAST(f.arr_delay AS DOUBLE)), 2) AS avg_arr_delay_min,
+COUNT(*)                                   AS total_flights
+FROM flights f
+JOIN airlines a ON f.airline_code = a.airline_code
+WHERE f.cancelled = false
+AND f.arr_delay IS NOT NULL
+GROUP BY a.airline_name
+ORDER BY avg_arr_delay_min ASC
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Returning Hive schema: Schema(fieldSchemas:[FieldSchema(name:airline_name, type:string, comment:null), FieldSchema(name:avg_arr_delay_min, type:double, comment:null), FieldSchema(name:total_flights, type:bigint, comment:null)], properties:null)
+INFO  : EXPLAIN output for queryid hive_20260415114212_4a30f9e5-ead8-4586-879d-72ecb7da500a : STAGE DEPENDENCIES:
+  Stage-1 is a root stage [MAPRED]
+  Stage-2 depends on stages: Stage-1 [DEPENDENCY_COLLECTION]
+  Stage-0 depends on stages: Stage-2 [MOVE]
+  Stage-3 depends on stages: Stage-0 [STATS]
+
+STAGE PLANS:
+  Stage: Stage-1
+    Tez
+      DagId: hive_20260415114212_4a30f9e5-ead8-4586-879d-72ecb7da500a:20964
+      Edges:
+        Map 1 <- Map 4 (BROADCAST_EDGE)
+        Reducer 2 <- Map 1 (SIMPLE_EDGE)
+        Reducer 3 <- Reducer 2 (SIMPLE_EDGE)
+      DagName: hive_20260415114212_4a30f9e5-ead8-4586-879d-72ecb7da500a:20964
+      Vertices:
+        Map 1 
+            Map Operator Tree:
+                TableScan
+                  alias: f
+                  Statistics: Num rows: 454085 Data size: 890007296 Basic stats: COMPLETE Column stats: NONE
+                  GatherStats: false
+                  Filter Operator
+                    isSamplingPred: false
+                    predicate: (airline_code is not null and arr_delay is not null and (not cancelled)) (type: boolean)
+                    Statistics: Num rows: 227042 Data size: 445002667 Basic stats: COMPLETE Column stats: NONE
+                    Select Operator
+                      expressions: airline_code (type: string), arr_delay (type: string)
+                      outputColumnNames: _col0, _col1
+                      Statistics: Num rows: 227042 Data size: 445002667 Basic stats: COMPLETE Column stats: NONE
+                      Map Join Operator
+                        condition map:
+                             Inner Join 0 to 1
+                        Estimated key counts: Map 4 => 44
+                        keys:
+                          0 _col0 (type: string)
+                          1 _col0 (type: string)
+                        outputColumnNames: _col1, _col4
+                        input vertices:
+                          1 Map 4
+                        Position of Big Table: 0
+                        Statistics: Num rows: 249746 Data size: 489502944 Basic stats: COMPLETE Column stats: NONE
+                        HybridGraceHashJoin: true
+                        Select Operator
+                          expressions: _col4 (type: string), UDFToDouble(_col1) (type: double)
+                          outputColumnNames: _col0, _col1
+                          Statistics: Num rows: 249746 Data size: 489502944 Basic stats: COMPLETE Column stats: NONE
+                          Group By Operator
+                            aggregations: sum(_col1), count(_col1), count()
+                            keys: _col0 (type: string)
+                            mode: hash
+                            outputColumnNames: _col0, _col1, _col2, _col3
+                            Statistics: Num rows: 249746 Data size: 489502944 Basic stats: COMPLETE Column stats: NONE
+                            Reduce Output Operator
+                              key expressions: _col0 (type: string)
+                              null sort order: a
+                              sort order: +
+                              Map-reduce partition columns: _col0 (type: string)
+                              Statistics: Num rows: 249746 Data size: 489502944 Basic stats: COMPLETE Column stats: NONE
+                              tag: -1
+                              value expressions: _col1 (type: double), _col2 (type: bigint), _col3 (type: bigint)
+                              auto parallelism: true
+            Execution mode: vectorized
+            Path -> Alias:
+              hdfs://hadoop-02.uni.innopolis.ru:8020/user/team14/project/warehouse/flights [f]
+            Path -> Partition:
+              hdfs://hadoop-02.uni.innopolis.ru:8020/user/team14/project/warehouse/flights 
+                Partition
+                  base file name: flights
+                  input format: org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat
+                  properties:
+                    EXTERNAL TRUE
+                    bucket_count -1
+                    bucketing_version 2
+                    column.name.delimiter ,
+                    columns flight_id,airline_code,origin,dest,fl_number,fl_date,crs_dep_time,dep_time,crs_arr_time,arr_time,dep_delay,arr_delay,taxi_out,wheels_off,wheels_on,taxi_in,cancelled,cancellation_code,diverted,crs_elapsed_time,elapsed_time,air_time,distance,delay_due_carrier,delay_due_weather,delay_due_nas,delay_due_security,delay_due_late_aircraft
+                    columns.comments 
+                    columns.types bigint:string:string:string:int:bigint:bigint:bigint:bigint:bigint:string:string:string:bigint:bigint:string:boolean:string:boolean:string:string:string:string:string:string:string:string:string
+                    file.inputformat org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat
+                    file.outputformat org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat
+                    location hdfs://hadoop-02.uni.innopolis.ru:8020/user/team14/project/warehouse/flights
+                    name team14_projectdb.flights
+                    numFiles 1
+                    serialization.ddl struct flights { i64 flight_id, string airline_code, string origin, string dest, i32 fl_number, i64 fl_date, i64 crs_dep_time, i64 dep_time, i64 crs_arr_time, i64 arr_time, string dep_delay, string arr_delay, string taxi_out, i64 wheels_off, i64 wheels_on, string taxi_in, bool cancelled, string cancellation_code, bool diverted, string crs_elapsed_time, string elapsed_time, string air_time, string distance, string delay_due_carrier, string delay_due_weather, string delay_due_nas, string delay_due_security, string delay_due_late_aircraft}
+                    serialization.format 1
+                    serialization.lib org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe
+                    totalSize 89000726
+                    transient_lastDdlTime 1776242520
+                  serde: org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe
+                
+                    input format: org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat
+                    output format: org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat
+                    properties:
+                      EXTERNAL TRUE
+                      bucket_count -1
+                      bucketing_version 2
+                      column.name.delimiter ,
+                      columns flight_id,airline_code,origin,dest,fl_number,fl_date,crs_dep_time,dep_time,crs_arr_time,arr_time,dep_delay,arr_delay,taxi_out,wheels_off,wheels_on,taxi_in,cancelled,cancellation_code,diverted,crs_elapsed_time,elapsed_time,air_time,distance,delay_due_carrier,delay_due_weather,delay_due_nas,delay_due_security,delay_due_late_aircraft
+                      columns.comments 
+                      columns.types bigint:string:string:string:int:bigint:bigint:bigint:bigint:bigint:string:string:string:bigint:bigint:string:boolean:string:boolean:string:string:string:string:string:string:string:string:string
+                      file.inputformat org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat
+                      file.outputformat org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat
+                      location hdfs://hadoop-02.uni.innopolis.ru:8020/user/team14/project/warehouse/flights
+                      name team14_projectdb.flights
+                      numFiles 1
+                      serialization.ddl struct flights { i64 flight_id, string airline_code, string origin, string dest, i32 fl_number, i64 fl_date, i64 crs_dep_time, i64 dep_time, i64 crs_arr_time, i64 arr_time, string dep_delay, string arr_delay, string taxi_out, i64 wheels_off, i64 wheels_on, string taxi_in, bool cancelled, string cancellation_code, bool diverted, string crs_elapsed_time, string elapsed_time, string air_time, string distance, string delay_due_carrier, string delay_due_weather, string delay_due_nas, string delay_due_security, string delay_due_late_aircraft}
+                      serialization.format 1
+                      serialization.lib org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe
+                      totalSize 89000726
+                      transient_lastDdlTime 1776242520
+                    serde: org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe
+                    name: team14_projectdb.flights
+                  name: team14_projectdb.flights
+            Truncated Path -> Alias:
+              hdfs://hadoop-02.uni.innopolis.ru:8020/user/team14/project/warehouse/flights [f]
+        Map 4 
+            Map Operator Tree:
+                TableScan
+                  alias: a
+                  Statistics: Num rows: 44 Data size: 21570 Basic stats: COMPLETE Column stats: NONE
+                  GatherStats: false
+                  Filter Operator
+                    isSamplingPred: false
+                    predicate: airline_code is not null (type: boolean)
+                    Statistics: Num rows: 44 Data size: 21570 Basic stats: COMPLETE Column stats: NONE
+                    Select Operator
+                      expressions: airline_code (type: string), airline_name (type: string)
+                      outputColumnNames: _col0, _col1
+                      Statistics: Num rows: 44 Data size: 21570 Basic stats: COMPLETE Column stats: NONE
+                      Reduce Output Operator
+                        key expressions: _col0 (type: string)
+                        null sort order: a
+                        sort order: +
+                        Map-reduce partition columns: _col0 (type: string)
+                        Statistics: Num rows: 44 Data size: 21570 Basic stats: COMPLETE Column stats: NONE
+                        tag: 1
+                        value expressions: _col1 (type: string)
+                        auto parallelism: true
+            Execution mode: vectorized
+            Path -> Alias:
+              hdfs://hadoop-02.uni.innopolis.ru:8020/user/team14/project/warehouse/airlines [a]
+            Path -> Partition:
+              hdfs://hadoop-02.uni.innopolis.ru:8020/user/team14/project/warehouse/airlines 
+                Partition
+                  base file name: airlines
+                  input format: org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat
+                  output format: org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat
+                  properties:
+                    EXTERNAL TRUE
+                    bucket_count -1
+                    bucketing_version 2
+                    column.name.delimiter ,
+                    columns airline_code,airline_name,airline_dot,dot_code
+                    columns.comments 
+                    columns.types string:string:string:int
+                    file.inputformat org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat
+                    file.outputformat org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat
+                    location hdfs://hadoop-02.uni.innopolis.ru:8020/user/team14/project/warehouse/airlines
+                    name team14_projectdb.airlines
+                    numFiles 1
+                    serialization.ddl struct airlines { string airline_code, string airline_name, string airline_dot, i32 dot_code}
+                    serialization.format 1
+                    serialization.lib org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe
+                    totalSize 2157
+                    transient_lastDdlTime 1776242519
+                  serde: org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe
+                
+                    input format: org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat
+                    output format: org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat
+                    properties:
+                      EXTERNAL TRUE
+                      bucket_count -1
+                      bucketing_version 2
+                      column.name.delimiter ,
+                      columns airline_code,airline_name,airline_dot,dot_code
+                      columns.comments 
+                      columns.types string:string:string:int
+                      file.inputformat org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat
+                      file.outputformat org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat
+                      location hdfs://hadoop-02.uni.innopolis.ru:8020/user/team14/project/warehouse/airlines
+                      name team14_projectdb.airlines
+                      numFiles 1
+                      serialization.ddl struct airlines { string airline_code, string airline_name, string airline_dot, i32 dot_code}
+                      serialization.format 1
+                      serialization.lib org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe
+                      totalSize 2157
+                      transient_lastDdlTime 1776242519
+                    serde: org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe
+                    name: team14_projectdb.airlines
+                  name: team14_projectdb.airlines
+            Truncated Path -> Alias:
+              hdfs://hadoop-02.uni.innopolis.ru:8020/user/team14/project/warehouse/airlines [a]
+        Reducer 2 
+            Execution mode: vectorized
+            Needs Tagging: false
+            Reduce Operator Tree:
+              Group By Operator
+                aggregations: sum(VALUE._col0), count(VALUE._col1), count(VALUE._col2)
+                keys: KEY._col0 (type: string)
+                mode: mergepartial
+                outputColumnNames: _col0, _col1, _col2, _col3
+                Statistics: Num rows: 124873 Data size: 244751472 Basic stats: COMPLETE Column stats: NONE
+                Select Operator
+                  expressions: _col0 (type: string), round((_col1 / _col2), 2) (type: double), _col3 (type: bigint)
+                  outputColumnNames: _col0, _col1, _col2
+                  Statistics: Num rows: 124873 Data size: 244751472 Basic stats: COMPLETE Column stats: NONE
+                  Reduce Output Operator
+                    key expressions: _col1 (type: double)
+                    null sort order: a
+                    sort order: +
+                    Statistics: Num rows: 124873 Data size: 244751472 Basic stats: COMPLETE Column stats: NONE
+                    tag: -1
+                    value expressions: _col0 (type: string), _col2 (type: bigint)
+                    auto parallelism: false
+        Reducer 3 
+            Needs Tagging: false
+            Reduce Operator Tree:
+              Select Operator
+                expressions: VALUE._col0 (type: string), KEY.reducesinkkey0 (type: double), VALUE._col1 (type: bigint)
+                outputColumnNames: _col0, _col1, _col2
+                Statistics: Num rows: 124873 Data size: 244751472 Basic stats: COMPLETE Column stats: NONE
+                File Output Operator
+                  compressed: false
+                  GlobalTableId: 1
+                  directory: hdfs://hadoop-02.uni.innopolis.ru:8020/user/team14/project/hive/warehouse/q1_results/.hive-staging_hive_2026-04-15_11-42-12_436_3219214787066813776-15210/-ext-10000
+                  NumFilesPerFileSink: 1
+                  Statistics: Num rows: 124873 Data size: 244751472 Basic stats: COMPLETE Column stats: NONE
+                  Stats Publishing Key Prefix: hdfs://hadoop-02.uni.innopolis.ru:8020/user/team14/project/hive/warehouse/q1_results/.hive-staging_hive_2026-04-15_11-42-12_436_3219214787066813776-15210/-ext-10000/
+                  table:
+                      input format: org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat
+                      output format: org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat
+                      properties:
+                        COLUMN_STATS_ACCURATE {"BASIC_STATS":"true","COLUMN_STATS":{"airline_name":"true","avg_arr_delay_min":"true","total_flights":"true"}}
+                        bucket_count -1
+                        bucketing_version 2
+                        column.name.delimiter ,
+                        columns airline_name,avg_arr_delay_min,total_flights
+                        columns.comments 
+                        columns.types string:double:bigint
+                        file.inputformat org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat
+                        file.outputformat org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat
+                        location hdfs://hadoop-02.uni.innopolis.ru:8020/user/team14/project/hive/warehouse/q1_results
+                        name team14_projectdb.q1_results
+                        numFiles 0
+                        numRows 0
+                        rawDataSize 0
+                        serialization.ddl struct q1_results { string airline_name, double avg_arr_delay_min, i64 total_flights}
+                        serialization.format 1
+                        serialization.lib org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe
+                        totalSize 0
+                        transient_lastDdlTime 1776242532
+                      serde: org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe
+                      name: team14_projectdb.q1_results
+                  TotalFiles: 1
+                  GatherStats: true
+                  MultiFileSpray: false
+                Select Operator
+                  expressions: _col0 (type: string), _col1 (type: double), _col2 (type: bigint)
+                  outputColumnNames: airline_name, avg_arr_delay_min, total_flights
+                  Statistics: Num rows: 124873 Data size: 244751472 Basic stats: COMPLETE Column stats: NONE
+                  Group By Operator
+                    aggregations: compute_stats(airline_name, 'hll'), compute_stats(avg_arr_delay_min, 'hll'), compute_stats(total_flights, 'hll')
+                    mode: complete
+                    outputColumnNames: _col0, _col1, _col2
+                    Statistics: Num rows: 1 Data size: 1296 Basic stats: COMPLETE Column stats: NONE
+                    Select Operator
+                      expressions: _col0 (type: struct<columntype:string,maxlength:bigint,avglength:double,countnulls:bigint,numdistinctvalues:bigint,ndvbitvector:binary>), _col1 (type: struct<columntype:string,min:double,max:double,countnulls:bigint,numdistinctvalues:bigint,ndvbitvector:binary>), _col2 (type: struct<columntype:string,min:bigint,max:bigint,countnulls:bigint,numdistinctvalues:bigint,ndvbitvector:binary>)
+                      outputColumnNames: _col0, _col1, _col2
+                      Statistics: Num rows: 1 Data size: 1296 Basic stats: COMPLETE Column stats: NONE
+                      File Output Operator
+                        compressed: false
+                        GlobalTableId: 0
+                        directory: hdfs://hadoop-02.uni.innopolis.ru:8020/tmp/hive/team14/9facca35-767c-4da0-bddf-bb9323717375/hive_2026-04-15_11-42-12_645_8989157170342089051-15210/-mr-10000/.hive-staging_hive_2026-04-15_11-42-12_645_8989157170342089051-15210/-ext-10001
+                        NumFilesPerFileSink: 1
+                        Statistics: Num rows: 1 Data size: 1296 Basic stats: COMPLETE Column stats: NONE
+                        Stats Publishing Key Prefix: hdfs://hadoop-02.uni.innopolis.ru:8020/tmp/hive/team14/9facca35-767c-4da0-bddf-bb9323717375/hive_2026-04-15_11-42-12_645_8989157170342089051-15210/-mr-10000/.hive-staging_hive_2026-04-15_11-42-12_645_8989157170342089051-15210/-ext-10001/
+                        table:
+                            input format: org.apache.hadoop.mapred.SequenceFileInputFormat
+                            output format: org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat
+                            properties:
+                              columns _col0,_col1,_col2
+                              columns.types struct<columntype:string,maxlength:bigint,avglength:double,countnulls:bigint,numdistinctvalues:bigint,ndvbitvector:binary>:struct<columntype:string,min:double,max:double,countnulls:bigint,numdistinctvalues:bigint,ndvbitvector:binary>:struct<columntype:string,min:bigint,max:bigint,countnulls:bigint,numdistinctvalues:bigint,ndvbitvector:binary>
+                              escape.delim \
+                              hive.serialization.extend.additional.nesting.levels true
+                              serialization.escape.crlf true
+                              serialization.format 1
+                              serialization.lib org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                            serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+                        TotalFiles: 1
+                        GatherStats: false
+                        MultiFileSpray: false
+
+  Stage: Stage-2
+    Dependency Collection
+
+  Stage: Stage-0
+    Move Operator
+      tables:
+          replace: false
+          source: hdfs://hadoop-02.uni.innopolis.ru:8020/user/team14/project/hive/warehouse/q1_results/.hive-staging_hive_2026-04-15_11-42-12_436_3219214787066813776-15210/-ext-10000
+          table:
+              input format: org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat
+              output format: org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat
+              properties:
+                COLUMN_STATS_ACCURATE {"BASIC_STATS":"true","COLUMN_STATS":{"airline_name":"true","avg_arr_delay_min":"true","total_flights":"true"}}
+                bucket_count -1
+                bucketing_version 2
+                column.name.delimiter ,
+                columns airline_name,avg_arr_delay_min,total_flights
+                columns.comments 
+                columns.types string:double:bigint
+                file.inputformat org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat
+                file.outputformat org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat
+                location hdfs://hadoop-02.uni.innopolis.ru:8020/user/team14/project/hive/warehouse/q1_results
+                name team14_projectdb.q1_results
+                numFiles 0
+                numRows 0
+                rawDataSize 0
+                serialization.ddl struct q1_results { string airline_name, double avg_arr_delay_min, i64 total_flights}
+                serialization.format 1
+                serialization.lib org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe
+                totalSize 0
+                transient_lastDdlTime 1776242532
+              serde: org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe
+              name: team14_projectdb.q1_results
+
+  Stage: Stage-3
+    Stats Work
+      Basic Stats Work:
+          Stats Aggregation Key Prefix: hdfs://hadoop-02.uni.innopolis.ru:8020/user/team14/project/hive/warehouse/q1_results/.hive-staging_hive_2026-04-15_11-42-12_436_3219214787066813776-15210/-ext-10000/
+      Column Stats Desc:
+          Columns: airline_name, avg_arr_delay_min, total_flights
+          Column Types: string, double, bigint
+          Table: team14_projectdb.q1_results
+          Is Table Level Stats: true
+
+
+INFO  : Completed compiling command(queryId=hive_20260415114212_4a30f9e5-ead8-4586-879d-72ecb7da500a); Time taken: 0.255 seconds
+INFO  : Executing command(queryId=hive_20260415114212_4a30f9e5-ead8-4586-879d-72ecb7da500a): INSERT INTO TABLE q1_results
+SELECT
+a.airline_name,
+ROUND(AVG(CAST(f.arr_delay AS DOUBLE)), 2) AS avg_arr_delay_min,
+COUNT(*)                                   AS total_flights
+FROM flights f
+JOIN airlines a ON f.airline_code = a.airline_code
+WHERE f.cancelled = false
+AND f.arr_delay IS NOT NULL
+GROUP BY a.airline_name
+ORDER BY avg_arr_delay_min ASC
+INFO  : Query ID = hive_20260415114212_4a30f9e5-ead8-4586-879d-72ecb7da500a
+INFO  : Total jobs = 1
+INFO  : Launching Job 1 out of 1
+INFO  : Starting task [Stage-1:MAPRED] in serial mode
+INFO  : Subscribed to counters: [] for queryId: hive_20260415114212_4a30f9e5-ead8-4586-879d-72ecb7da500a
+INFO  : Tez session hasn't been created yet. Opening session
+INFO  : Dag name: INSERT INTO TABLE q1_results
+SELECT
+a....ASC (Stage-1)
+INFO  : Setting tez.task.scale.memory.reserve-fraction to 0.30000001192092896
+INFO  : Status: Running (Executing on YARN cluster with App id application_1747772973109_1522)
+
+[2K----------------------------------------------------------------------------------------------
+[2K[36;1m        VERTICES      MODE        STATUS  TOTAL  COMPLETED  RUNNING  PENDING  FAILED  KILLED  
+[22;0m[2K----------------------------------------------------------------------------------------------
+[2KMap 4            container       RUNNING      1          0        1        0       0       0  
+Map 1            container       RUNNING      2          0        2        0       0       0  
+Reducer 2        container        INITED      2          0        0        2       0       0  
+Reducer 3        container        INITED      1          0        0        1       0       0  
+[2K----------------------------------------------------------------------------------------------
+[2K[31;1mVERTICES: 00/04  [>>--------------------------] 0%    ELAPSED TIME: 4.59 s     
+[22;0m[2K----------------------------------------------------------------------------------------------
+[10A[2K----------------------------------------------------------------------------------------------
+[2K[36;1m        VERTICES      MODE        STATUS  TOTAL  COMPLETED  RUNNING  PENDING  FAILED  KILLED  
+[22;0m[2K----------------------------------------------------------------------------------------------
+[2KMap 4 .......... container     SUCCEEDED      1          1        0        0       0       0  
+Map 1            container       RUNNING      2          0        2        0       0       0  
+Reducer 2        container        INITED      2          0        0        2       0       0  
+Reducer 3        container        INITED      1          0        0        1       0       0  
+[2K----------------------------------------------------------------------------------------------
+[2K[31;1mVERTICES: 01/04  [====>>----------------------] 16%   ELAPSED TIME: 5.10 s     
+[22;0m[2K----------------------------------------------------------------------------------------------
+[10A[2K----------------------------------------------------------------------------------------------
+[2K[36;1m        VERTICES      MODE        STATUS  TOTAL  COMPLETED  RUNNING  PENDING  FAILED  KILLED  
+[22;0m[2K----------------------------------------------------------------------------------------------
+[2KMap 4 .......... container     SUCCEEDED      1          1        0        0       0       0  
+Map 1 .....      container       RUNNING      2          1        1        0       0       0  
+Reducer 2        container       RUNNING      2          0        2        0       0       0  
+Reducer 3        container        INITED      1          0        0        1       0       0  
+[2K----------------------------------------------------------------------------------------------
+[2K[31;1mVERTICES: 01/04  [========>>------------------] 33%   ELAPSED TIME: 5.60 s     
+[22;0m[2K----------------------------------------------------------------------------------------------
+[10A[2K----------------------------------------------------------------------------------------------
+[2K[36;1m        VERTICES      MODE        STATUS  TOTAL  COMPLETED  RUNNING  PENDING  FAILED  KILLED  
+[22;0m[2K----------------------------------------------------------------------------------------------
+[2KMap 4 .......... container     SUCCEEDED      1          1        0        0       0       0  
+Map 1 .....      container       RUNNING      2          1        1        0       0       0  
+Reducer 2        container       RUNNING      2          0        2        0       0       0  
+Reducer 3        container        INITED      1          0        0        1       0       0  
+[2K----------------------------------------------------------------------------------------------
+[2K[31;1mVERTICES: 01/04  [========>>------------------] 33%   ELAPSED TIME: 6.60 s     
+[22;0m[2K----------------------------------------------------------------------------------------------
+[10A[2K----------------------------------------------------------------------------------------------
+[2K[36;1m        VERTICES      MODE        STATUS  TOTAL  COMPLETED  RUNNING  PENDING  FAILED  KILLED  
+[22;0m[2K----------------------------------------------------------------------------------------------
+[2KMap 4 .......... container     SUCCEEDED      1          1        0        0       0       0  
+Map 1 .......... container     SUCCEEDED      2          2        0        0       0       0  
+Reducer 2        container       RUNNING      2          0        2        0       0       0  
+Reducer 3        container        INITED      1          0        0        1       0       0  
+[2K----------------------------------------------------------------------------------------------
+[2K[31;1mVERTICES: 02/04  [=============>>-------------] 50%   ELAPSED TIME: 7.60 s     
+[22;0m[2K----------------------------------------------------------------------------------------------
+[10A[2K----------------------------------------------------------------------------------------------
+[2K[36;1m        VERTICES      MODE        STATUS  TOTAL  COMPLETED  RUNNING  PENDING  FAILED  KILLED  
+[22;0m[2K----------------------------------------------------------------------------------------------
+[2KMap 4 .......... container     SUCCEEDED      1          1        0        0       0       0  
+Map 1 .......... container     SUCCEEDED      2          2        0        0       0       0  
+Reducer 2 ...... container     SUCCEEDED      2          2        0        0       0       0  
+Reducer 3 ...... container     SUCCEEDED      1          1        0        0       0       0  
+[2K----------------------------------------------------------------------------------------------
+[2K[31;1mVERTICES: 04/04  [==========================>>] 100%  ELAPSED TIME: 8.20 s     
+[22;0m[2K----------------------------------------------------------------------------------------------
+INFO  : Starting task [Stage-2:DEPENDENCY_COLLECTION] in serial mode
+INFO  : Starting task [Stage-0:MOVE] in serial mode
+INFO  : Loading data to table team14_projectdb.q1_results from hdfs://hadoop-02.uni.innopolis.ru:8020/user/team14/project/hive/warehouse/q1_results/.hive-staging_hive_2026-04-15_11-42-12_436_3219214787066813776-15210/-ext-10000
+INFO  : Starting task [Stage-3:STATS] in serial mode
+INFO  : Completed executing command(queryId=hive_20260415114212_4a30f9e5-ead8-4586-879d-72ecb7da500a); Time taken: 12.788 seconds
+INFO  : OK
+No rows affected (13.069 seconds)
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> SELECT * FROM q1_results;
+INFO  : Compiling command(queryId=hive_20260415114225_58e1d1f6-e6a5-440b-9c47-27c2e44ac4ed): SELECT * FROM q1_results
+INFO  : Semantic Analysis Completed (retrial = false)
+INFO  : Returning Hive schema: Schema(fieldSchemas:[FieldSchema(name:airline_name, type:string, comment:null), FieldSchema(name:avg_arr_delay_min, type:double, comment:null), FieldSchema(name:total_flights, type:bigint, comment:null)], properties:null)
+INFO  : EXPLAIN output for queryid hive_20260415114225_58e1d1f6-e6a5-440b-9c47-27c2e44ac4ed : STAGE DEPENDENCIES:
+  Stage-0 is a root stage [FETCH]
+
+STAGE PLANS:
+  Stage: Stage-0
+    Fetch Operator
+      limit: -1
+      Processor Tree:
+        TableScan
+          alias: q1_results
+          GatherStats: false
+          Select Operator
+            expressions: airline_name (type: string), avg_arr_delay_min (type: double), total_flights (type: bigint)
+            outputColumnNames: _col0, _col1, _col2
+            ListSink
+
+
+INFO  : Completed compiling command(queryId=hive_20260415114225_58e1d1f6-e6a5-440b-9c47-27c2e44ac4ed); Time taken: 0.168 seconds
+INFO  : Executing command(queryId=hive_20260415114225_58e1d1f6-e6a5-440b-9c47-27c2e44ac4ed): SELECT * FROM q1_results
+INFO  : Completed executing command(queryId=hive_20260415114225_58e1d1f6-e6a5-440b-9c47-27c2e44ac4ed); Time taken: 0.0 seconds
+INFO  : OK
++-------------------------------------+--------------------+----------------+
+|            airline_name             | avg_arr_delay_min  | total_flights  |
++-------------------------------------+--------------------+----------------+
+| Endeavor Air Inc.                   | -1.26              | 109848         |
+| Republic Airline                    | 0.59               | 138147         |
+| Delta Air Lines Inc.                | 1.09               | 388475         |
+| Alaska Airlines Inc.                | 1.1                | 98294          |
+| Horizon Air                         | 2.38               | 20237          |
+| Southwest Airlines Co.              | 3.27               | 555869         |
+| Envoy Air                           | 3.28               | 117312         |
+| Hawaiian Airlines Inc.              | 3.89               | 31698          |
+| PSA Airlines Inc.                   | 3.93               | 103483         |
+| SkyWest Airlines Inc.               | 4.02               | 334986         |
+| United Air Lines Inc.               | 5.04               | 248270         |
+| American Airlines Inc.              | 6.66               | 371218         |
+| Mesa Airlines Inc.                  | 7.31               | 62477          |
+| Spirit Air Lines                    | 8.03               | 93200          |
+| ExpressJet Airlines LLC d/b/a aha!  | 10.03              | 17951          |
+| Frontier Airlines Inc.              | 11.1               | 62711          |
+| JetBlue Airways                     | 12.28              | 109447         |
+| Allegiant Air                       | 13.28              | 50179          |
++-------------------------------------+--------------------+----------------+
+18 rows selected (0.259 seconds)
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> Closing: 0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10001
