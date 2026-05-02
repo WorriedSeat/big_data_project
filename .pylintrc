@@ -1,0 +1,3 @@
+[MESSAGES CONTROL]
+# PySpark and cluster libraries are not installed on every dev machine.
+disable=import-error
