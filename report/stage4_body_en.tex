@@ -1,0 +1,85 @@
+% Stage IV — English body for Overleaf: \input{stage4_body_en}
+% Requires in preamble: \usepackage{graphicx} \usepackage{hyperref} \usepackage{booktabs}
+% Replace FIG placeholders with exported PNGs from Superset (upload to Overleaf or use project path).
+
+\section{Stage IV: Presentation and Delivery (Apache Superset)}
+
+\subsection{Objectives and scope}
+This stage delivers a \textbf{single published Apache Superset dashboard} that communicates (i) relational \textbf{data characteristics} from PostgreSQL, (ii) \textbf{exploratory insights} from Hive tables produced in Stage~II, and (iii) \textbf{predictive modeling results} from Stage~III, including feature documentation, hyper-parameter search summaries, evaluation metrics, and sample predictions. The dashboard is intended for stakeholders who need actionable signals on delay and cancellation risk rather than raw cluster logs.
+
+\subsection{Technical setup}
+\begin{itemize}
+  \item \textbf{Hive:} External tables \texttt{ml\_feature\_catalog}, \texttt{ml\_hyperparam\_grid}, \texttt{ml\_eval\_metrics}, and prediction tables \texttt{ml\_pred\_random\_forest}, \texttt{ml\_pred\_linear\_svc}, \texttt{ml\_pred\_naive\_bayes} are registered in \texttt{team14\_projectdb} by running \texttt{bash scripts/stage4.sh} on the IU Hadoop edge node. The script uploads small CSV catalogs to HDFS and executes \texttt{sql/stage4\_ml\_dashboard.hql} via Beeline.
+  \item \textbf{Superset:} Two database connections are used---\textbf{PostgreSQL} (\texttt{team14sql} / \texttt{public}) for relational samples, and \textbf{Hive} (\texttt{team14hive} / \texttt{team14\_projectdb}) for EDA and ML datasets.
+  \item \textbf{Published URL:} \url{http://hadoop-03.uni.innopolis.ru:8808/superset/dashboard/218/}
+\end{itemize}
+
+\subsection{Dashboard structure (storyline)}
+The layout follows a top-to-bottom narrative:
+\begin{enumerate}
+  \item \textbf{Introduction} (Markdown): goal, stack (Postgres $\rightarrow$ Hive $\rightarrow$ Spark on YARN), and how to read PR vs.\ ROC under class imbalance.
+  \item \textbf{Data description (PostgreSQL):} a row-limited \texttt{flights} sample table (and optional row-count / column-type charts or equivalent SQL outputs referenced in the appendix).
+  \item \textbf{EDA (Hive):} five charts on \texttt{q1\_results}--\texttt{q5\_results} covering seasonality, cancellation mix by carrier, arrival delay ranking, busiest routes, and delay attribution among delayed flights.
+  \item \textbf{ML (Hive):} test-set metric comparison, hyper-parameter grid summary, feature catalog, and three held-out prediction sample tables (RandomForest, LinearSVC, NaiveBayes).
+  \item \textbf{Takeaway} (Markdown): champion model discussion (PR-focused), thresholding and monitoring recommendations.
+\end{enumerate}
+
+\subsection{Mapping to grading rubric (15 points)}
+\begin{description}
+  \item[Data characteristics (1 pt):] PostgreSQL sample + narrative on source, coverage, and cleaning; optional explicit row counts and \texttt{information\_schema} extracts in appendix.
+  \item[Insights + descriptions (6 pt):] Five Stage~II charts with section text and per-chart takeaways where space allows.
+  \item[Model performance (4 pt):] Table comparing ROC AUC, PR AUC, accuracy, and F1 across models.
+  \item[Prediction results (2 pt):] Row-limited prediction tables for each tuned model.
+  \item[Visual quality (2 pt):] Consistent grid (rows/columns), section headers/dividers, readable table widths.
+\end{description}
+
+\subsection{Figures (replace with your screenshots)}
+\begin{figure}[htbp]
+  \centering
+  % \includegraphics[width=\linewidth]{figs/stage4_dashboard_full.png}
+  \fbox{\parbox{0.92\linewidth}{\centering\vspace{2.2cm}\textit{Insert full-dashboard screenshot (PNG)}\vspace{2.2cm}}}
+  \caption{Published Superset dashboard (overview).}
+  \label{fig:stage4-full}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  % \includegraphics[width=\linewidth]{figs/stage4_ml_section.png}
+  \fbox{\parbox{0.92\linewidth}{\centering\vspace{2.2cm}\textit{Insert ML section screenshot (PNG)}\vspace{2.2cm}}}
+  \caption{ML modeling section: metrics, hyper-parameters, features, and prediction samples.}
+  \label{fig:stage4-ml}
+\end{figure}
+
+\subsection{Automation and reproducibility (outside Superset)}
+Stage~IV automation is implemented as shell and HiveQL artifacts:
+\begin{itemize}
+  \item \texttt{scripts/stage4.sh} --- uploads \texttt{sql/data/stage4\_ml\_features.csv} and \texttt{stage4\_ml\_hyper.csv} to HDFS and applies \texttt{sql/stage4\_ml\_dashboard.hql}.
+  \item \texttt{tests/test\_stage4\_assets.py} --- local checks for file presence and shell syntax where \texttt{bash} is available.
+  \item \texttt{scripts/stage4\_validate.py} --- lightweight validator for Stage~IV files (also linted under \texttt{pylint scripts} per course pipeline).
+\end{itemize}
+
+\subsection{Reflection}
+\textbf{Challenges:} aligning Superset SQL Lab ``Explore'' workflows with cluster policies; keeping prediction tables responsive via strict row limits. \textbf{Mitigations:} virtual datasets from saved SQL where needed; Hive external tables for all ML CSV directories written by Spark.
+
+\subsection{Checklist traceability}
+Table~\ref{tab:stage4-checklist} maps the official Stage~IV checklist items to concrete deliverables in this repository and dashboard.
+
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{p{0.42\linewidth}p{0.48\linewidth}}
+    \toprule
+    Checklist item & Evidence \\
+    \midrule
+    Postgres charts in data description & Superset charts / SQL Lab outputs + this section \\
+    Row counts, types, samples, cleaning & Sample table + appendix SQL + Markdown \\
+    Stage~II charts in insights & \texttt{q1\_results}--\texttt{q5\_results} charts \\
+    Hive external tables for Stage~III & \texttt{stage4.sh} + \texttt{stage4\_ml\_dashboard.hql} \\
+    ML charts (features, HP, preds, eval, compare) & \texttt{ml\_*} charts on dashboard \\
+    Publish dashboard & Public URL above \\
+    Scripts + \texttt{stage4.sh} test & Repository paths listed above \\
+    Report summary & This \LaTeX{} section \\
+    \bottomrule
+  \end{tabular}
+  \caption{Stage~IV checklist to deliverables mapping.}
+  \label{tab:stage4-checklist}
+\end{table}
