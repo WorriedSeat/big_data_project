@@ -1,0 +1,22 @@
+# Core data processing
+numpy==2.4.4
+pandas==3.0.2
+pyarrow==23.0.1
+
+# Database
+psycopg2-binary==2.9.11
+SQLAlchemy==2.0.49
+
+# Dataset download
+kagglehub==1.0.0
+tqdm==4.67.3
+
+# PySpark — provided by the cluster via spark-submit (YARN).
+# Install locally only for IDE support / unit tests without a real cluster:
+# pyspark==3.5.*
+
+# Jupyter notebooks
+ipykernel==7.2.0
+ipython==9.12.0
+jupyter_client==8.8.0
+jupyter_core==5.9.1
