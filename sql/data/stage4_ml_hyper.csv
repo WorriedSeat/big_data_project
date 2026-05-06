@@ -1,0 +1,10 @@
+model,parameter,search_space,best_selection_note
+RandomForestClassifier,maxDepth,values 6 10 14,max areaUnderPR via 3-fold CV on train split
+RandomForestClassifier,maxBins,vocab_plus_{1|129|257},vocab from StringIndexer cardinality on airline origin dest
+RandomForestClassifier,subsamplingRate,values 0.5 0.75 1.0,tuned with CrossValidator
+LinearSVC,regParam,values 0.01 0.05 0.2,CrossValidator maximizes areaUnderPR
+LinearSVC,threshold,values 0.35 0.5 0.65,same evaluator (binary PR)
+LinearSVC,aggregationDepth,values 2 3 4,aggregation depth for tree summaries
+NaiveBayes,smoothing,values 1e-4 5e-4 2e-3,Laplace smoothing grid
+NaiveBayes,thresholds,three pairs via thresholds param in grid,class-wise thresholds variants in ParamGridBuilder
+NaiveBayes,modelType,bernoulli and multinomial,binarized vs multinomial NB variants per Spark docs
