@@ -1,50 +1,19 @@
-0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> USE team14_projectdb;
-0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
-0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> DROP TABLE IF EXISTS q4_results;
-0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
-0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> CREATE TABLE q4_results (
-. . . . . . . . . . . . . . . . . . . . . . .>     airline_name          STRING,
-. . . . . . . . . . . . . . . . . . . . . . .>     total_flights         BIGINT,
-. . . . . . . . . . . . . . . . . . . . . . .>     cancelled_count       BIGINT,
-. . . . . . . . . . . . . . . . . . . . . . .>     cancellation_rate_pct DOUBLE
-. . . . . . . . . . . . . . . . . . . . . . .> )
-. . . . . . . . . . . . . . . . . . . . . . .> STORED AS PARQUET;
-0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
-0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> INSERT INTO TABLE q4_results
-. . . . . . . . . . . . . . . . . . . . . . .> SELECT
-. . . . . . . . . . . . . . . . . . . . . . .>     a.airline_name,
-. . . . . . . . . . . . . . . . . . . . . . .>     COUNT(*)                                                            AS total_flights,
-. . . . . . . . . . . . . . . . . . . . . . .>     SUM(CASE WHEN f.cancelled = true THEN 1 ELSE 0 END)               AS cancelled_count,
-. . . . . . . . . . . . . . . . . . . . . . .>     ROUND(
-. . . . . . . . . . . . . . . . . . . . . . .>         100.0 * SUM(CASE WHEN f.cancelled = true THEN 1 ELSE 0 END)
-. . . . . . . . . . . . . . . . . . . . . . .>               / COUNT(*), 2)                                            AS cancellation_rate_pct
-. . . . . . . . . . . . . . . . . . . . . . .> FROM flights f
-. . . . . . . . . . . . . . . . . . . . . . .> JOIN airlines a ON f.airline_code = a.airline_code
-. . . . . . . . . . . . . . . . . . . . . . .> GROUP BY a.airline_name
-. . . . . . . . . . . . . . . . . . . . . . .> ORDER BY cancellation_rate_pct DESC;
-0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
-0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> SELECT * FROM q4_results;
-+-------------------------------------+----------------+------------------+------------------------+
-|            airline_name             | total_flights  | cancelled_count  | cancellation_rate_pct  |
-+-------------------------------------+----------------+------------------+------------------------+
-| ExpressJet Airlines LLC d/b/a aha!  | 19082          | 1062             | 5.57                   |
-| Allegiant Air                       | 52738          | 2383             | 4.52                   |
-| Mesa Airlines Inc.                  | 65012          | 2373             | 3.65                   |
-| Southwest Airlines Co.              | 576470         | 19465            | 3.38                   |
-| Republic Airline                    | 143107         | 4646             | 3.25                   |
-| PSA Airlines Inc.                   | 107050         | 3301             | 3.08                   |
-| Envoy Air                           | 121256         | 3633             | 3.0                    |
-| American Airlines Inc.              | 383106         | 10907            | 2.85                   |
-| JetBlue Airways                     | 112844         | 3039             | 2.69                   |
-| Frontier Airlines Inc.              | 64466          | 1666             | 2.58                   |
-| Spirit Air Lines                    | 95711          | 2312             | 2.42                   |
-| SkyWest Airlines Inc.               | 343737         | 7745             | 2.25                   |
-| United Air Lines Inc.               | 254504         | 5536             | 2.18                   |
-| Endeavor Air Inc.                   | 112463         | 2394             | 2.13                   |
-| Alaska Airlines Inc.                | 100467         | 1934             | 1.93                   |
-| Horizon Air                         | 20634          | 374              | 1.81                   |
-| Delta Air Lines Inc.                | 395239         | 5982             | 1.51                   |
-| Hawaiian Airlines Inc.              | 32114          | 388              | 1.21                   |
-+-------------------------------------+----------------+------------------+------------------------+
-0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
-0: jdbc:hive2://hadoop-03.uni.innopolis.ru:10> 
+airline_name,total_flights,cancelled_count,cancellation_rate_pct
+ExpressJet Airlines LLC d/b/a aha!,19082,1062,5.57
+Allegiant Air,52738,2383,4.52
+Mesa Airlines Inc.,65012,2373,3.65
+Southwest Airlines Co.,576470,19465,3.38
+Republic Airline,143107,4646,3.25
+PSA Airlines Inc.,107050,3301,3.08
+Envoy Air,121256,3633,3.0
+American Airlines Inc.,383106,10907,2.85
+JetBlue Airways,112844,3039,2.69
+Frontier Airlines Inc.,64466,1666,2.58
+Spirit Air Lines,95711,2312,2.42
+SkyWest Airlines Inc.,343737,7745,2.25
+United Air Lines Inc.,254504,5536,2.18
+Endeavor Air Inc.,112463,2394,2.13
+Alaska Airlines Inc.,100467,1934,1.93
+Horizon Air,20634,374,1.81
+Delta Air Lines Inc.,395239,5982,1.51
+Hawaiian Airlines Inc.,32114,388,1.21
